@@ -1,8 +1,10 @@
-import { useState, useEffect, useRef} from "react";
+const PLAYERS = ["Jerry", "John", "Stu", "Jarvis"]
 
-const CHOICES = ["Jerry", "John", "Stu", "Jarvis"]
+export default function Card({ stratCards, turnIndex, assignmentCache, setName }) {
+  const name = assignmentCache[turnIndex]
+  const borderColor = stratCards[turnIndex].border
+  const num = stratCards[turnIndex].num
 
-export default function Card({ num, borderColor, name, setName }) {
   return (
     <div className={["my-3 flex justify-evenly flex-col grow items-center border border-8 rounded-3xl", `${borderColor}`].join(" ")}>
       <p className="text-9xl">{num}</p>
@@ -30,8 +32,8 @@ export default function Card({ num, borderColor, name, setName }) {
             flexDirection: 'column',
             gap: 10,
           }}>
-              {CHOICES.map((choice) => (
-                <div key={choice} onClick={() => setName(choice)} style={{ cursor: 'pointer', fontSize: 25, textTransform: 'uppercase' }}>{choice}</div>
+              {PLAYERS.map((player) => (
+                <div key={player} onClick={() => setName(player)} style={{ cursor: 'pointer', fontSize: 25, textTransform: 'uppercase' }}>{player}</div>
               ))}
           </div>
         )}

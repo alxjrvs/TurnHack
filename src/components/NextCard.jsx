@@ -1,6 +1,10 @@
-import { useState, useEffect, useRef} from "react";
+export default function NextCard({stratCards, turnIndex, assignmentCache }) {
+  const nextTurnIndex = turnIndex < 7 ? turnIndex + 1 : 0;
+  console.log('Next Turn Index', nextTurnIndex)
+  console.log('stratCards', stratCards)
+  const name = assignmentCache[nextTurnIndex]
+  const borderColor = stratCards[nextTurnIndex].border
 
-export default function NextCard({ num, borderColor, name, setName }) {
   if (!name) {
     return
   }
