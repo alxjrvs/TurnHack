@@ -1,9 +1,22 @@
-export default function NextCard({stratCards, turnIndex, assignmentCache }) {
-  const nextTurnIndex = turnIndex < 7 ? turnIndex + 1 : 0;
-  console.log('Next Turn Index', nextTurnIndex)
-  console.log('stratCards', stratCards)
+export default function NextCard({ stratCards, turnIndex, assignmentCache, passedCache }) {
+  if (!assignmentCache[turnIndex]) {
+    return null
+  }
+
+  const crawlForNext = (index) => {
+    const nextTurnIndex = index < 7 ? index + 1 : 0;
+    const hasPassed = !!passedCache[nextTurnIndex]
+
+    if(hasPassed) {
+      return crawlForNext(nextTurnIndex)
+    }
+    return nextTurnIndex
+  }
+
+  const nextTurnIndex = crawlForNext(turnIndex)
   const name = assignmentCache[nextTurnIndex]
-  const borderColor = stratCards[nextTurnIndex].border
+  const hasPassed = !!passedCache[nextTurnIndex]
+  const borderColor = hasPassed ? 'border-slate-800' : stratCards[nextTurnIndex].border
 
   if (!name) {
     return
