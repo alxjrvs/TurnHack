@@ -1,13 +1,24 @@
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const PLAYERS = ["Jerry", "John", "Stu", "Jarvis"]
 
-export default function Card({ stratCards, turnIndex, assignmentCache, setName, setPassedCache, passedCache }) {
-  const name = assignmentCache[turnIndex]
-  const hasPassed = !!passedCache[turnIndex]
-  const borderColor = hasPassed ? 'border-slate-800' : stratCards[turnIndex].border
-  const num = stratCards[turnIndex].num
-  const invalidPlayers = Object.values(assignmentCache).filter((e, i, a) => a.indexOf(e) !== i) // [2, 4]
+export default function Card({num, stratCards, setName, state:{assignmentCache, passedCache}, setState}) {
 
-  const onTogglePass = () => setPassedCache(cache => ({ ...cache, [turnIndex]: !hasPassed }))
+  const name = assignmentCache[num]
+  const hasPassed = !!passedCache[num]
+  console.log('NUM', num)
+  const borderColor = hasPassed ? 'border-slate-800' : stratCards[num].border
+  const invalidPlayers = Object.values(assignmentCache).filter((e, i, a) => a.indexOf(e) !== i)
+
+  const onSetName = (player) => {
+    if (!invalidPlayers.includes(player)) {
+      setName(num, player)
+      toast(`${player} has been assigned to #${num}`)
+    }
+  }
+
+  const onTogglePass = () => setState(cache => ({ ...cache, passedCache: { ...cache.passedCache, [num]: !hasPassed } }))
 
   return (
     <div className={["my-3 flex justify-evenly flex-col grow items-center border border-8 rounded-3xl", `${borderColor}`].join(" ")}>
@@ -39,7 +50,7 @@ export default function Card({ stratCards, turnIndex, assignmentCache, setName, 
               {PLAYERS.map((player) => (
                 <div
                   key={player}
-                  onClick={() => !invalidPlayers.includes(player) && setName(player)}
+                  onClick={() => onSetName(player)}
                   style={{
                     cursor: invalidPlayers.includes(player) ? 'not-allowed' : 'pointer',
                     fontSize: 25, textTransform: 'uppercase',
@@ -54,7 +65,6 @@ export default function Card({ stratCards, turnIndex, assignmentCache, setName, 
           </div>
         )}
       </div>
-      {name && <div style={{ cursor: 'pointer' }} onClick={() => setName()}><p>clear player choice</p></div>}
       {name && <div style={{ cursor: 'pointer' }} onClick={onTogglePass}>
         <p>{hasPassed ? 'Un-Pass' : 'Pass'}</p>
       </div>}

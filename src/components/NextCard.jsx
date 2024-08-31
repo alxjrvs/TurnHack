@@ -1,22 +1,12 @@
-export default function NextCard({ stratCards, turnIndex, assignmentCache, passedCache }) {
-  if (!assignmentCache[turnIndex]) {
+export default function NextCard({ crawlForNextUnpassed, num, stratCards, state: { assignmentCache, passedCache }}) {
+  if (!assignmentCache[num]) {
     return null
   }
 
-  const crawlForNext = (index) => {
-    const nextTurnIndex = index < 7 ? index + 1 : 0;
-    const hasPassed = !!passedCache[nextTurnIndex]
-
-    if(hasPassed) {
-      return crawlForNext(nextTurnIndex)
-    }
-    return nextTurnIndex
-  }
-
-  const nextTurnIndex = crawlForNext(turnIndex)
-  const name = assignmentCache[nextTurnIndex]
-  const hasPassed = !!passedCache[nextTurnIndex]
-  const borderColor = hasPassed ? 'border-slate-800' : stratCards[nextTurnIndex].border
+  const nextCurrentNum = crawlForNextUnpassed(num)
+  const name = assignmentCache[nextCurrentNum]
+  const hasPassed = !!passedCache[nextCurrentNum]
+  const borderColor = hasPassed ? 'border-slate-800' : stratCards[nextCurrentNum].border
 
   if (!name) {
     return
@@ -32,7 +22,7 @@ export default function NextCard({ stratCards, turnIndex, assignmentCache, passe
         margin: 10,
       }}>
         <p style={{flexGrow:1, minWidth: 200, textTransform: 'uppercase', fontSize: 12}}>UP NEXT</p>
-        <p style={{flexGrow:1, minWidth: 200, textTransform: 'uppercase', fontSize: 25}}>{name}</p>
+        <p style={{ flexGrow: 1, minWidth: 200, textTransform: 'uppercase', fontSize: 25 }}>{name} ({nextCurrentNum})</p>
       </div>
     </div>
   );
